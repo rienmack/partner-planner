@@ -1,4 +1,4 @@
-import { Appointment } from '../types/appointment'
+import { Event } from '../types/event'
 import {
   Table,
   TableBody,
@@ -10,11 +10,11 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-interface AppointmentListProps {
-  appointments: Appointment[]
+interface EventListProps {
+  events: Event[]
 }
 
-export function AppointmentList({ appointments }: AppointmentListProps) {
+export function EventList({ events }: EventListProps) {
   return (
     <ScrollArea className="h-[300px] md:h-[400px] rounded-md border">
       <Table>
@@ -26,13 +26,13 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {appointments.map((appointment, index) => (
+          {events.map((event, index) => (
             <TableRow key={index}>
-              <TableCell className="font-medium">{new Date(appointment.date).toLocaleDateString()}</TableCell>
-              <TableCell>{appointment.title}</TableCell>
+              <TableCell className="font-medium">{new Date(event.date).toLocaleDateString()}</TableCell>
+              <TableCell>{event.title}</TableCell>
               <TableCell className="text-right">
                 <Badge variant="outline">
-                  {new Date(appointment.date) > new Date() ? "Upcoming" : "Past"}
+                  {new Date(event.date) > new Date() ? "Upcoming" : "Past"}
                 </Badge>
               </TableCell>
             </TableRow>

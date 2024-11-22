@@ -4,16 +4,16 @@ import { useState, useMemo } from 'react'
 import { CalendarIcon } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Appointment } from '../types/appointment'
+import { Event } from '../types/event'
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { eachDayOfInterval, isSameDay } from 'date-fns'
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface CalendarProps {
-  appointments: Appointment[]
+  events: Event[]
 }
 
-export function AppointmentCalendar({ appointments }: CalendarProps) {
+export function EventCalendar({ events }: CalendarProps) {
   const [dateRange, setDateRange] = useState<{
     from: Date
     to: Date
@@ -53,8 +53,8 @@ export function AppointmentCalendar({ appointments }: CalendarProps) {
       <ScrollArea className="h-[300px] md:h-[400px] rounded-md border">
         <div className={`grid gap-2 p-2 md:p-4 ${gridColumns}`}>
           {selectedDays.map((date, index) => {
-            const dayAppointments = appointments.filter((apt) =>
-              isSameDay(new Date(apt.date), date)
+            const dayEvents = events.filter((evt) =>
+              isSameDay(new Date(evt.date), date)
             )
 
             return (
@@ -68,9 +68,9 @@ export function AppointmentCalendar({ appointments }: CalendarProps) {
                   </div>
                   <div className="text-sm md:text-lg font-bold mb-1 md:mb-2">{date.getDate()}</div>
                   <div className="space-y-1">
-                    {dayAppointments.map((apt, i) => (
+                    {dayEvents.map((evt, i) => (
                       <Badge key={i} variant="secondary" className="text-xs truncate w-full">
-                        {apt.title}
+                        {evt.title}
                       </Badge>
                     ))}
                   </div>

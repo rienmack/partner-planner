@@ -1,18 +1,18 @@
 "use client"
 
 import { useState } from 'react'
-import { AppointmentCalendar } from './calendar'
-import { AppointmentForm } from './appointment-form'
-import { AppointmentList } from './appointment-list'
-import { Appointment } from '../types/appointment'
+import { EventCalendar } from './calendar'
+import { EventForm } from './event-form'
+import { EventList } from './event-list'
+import { Event } from '../types/event'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function SchedulingApp() {
-  const [appointments, setAppointments] = useState<Appointment[]>([])
+  const [events, setEvents] = useState<Event[]>([])
 
-  const addAppointment = (appointment: Appointment) => {
-    setAppointments([...appointments, appointment])
+  const addEvent = (event: Event) => {
+    setEvents([...events, event])
   }
 
   return (
@@ -21,39 +21,39 @@ export function SchedulingApp() {
       <Tabs defaultValue="calendar" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="calendar">Calendar</TabsTrigger>
-          <TabsTrigger value="appointments">Appointments</TabsTrigger>
+          <TabsTrigger value="events">Events</TabsTrigger>
           <TabsTrigger value="new">New</TabsTrigger>
         </TabsList>
         <TabsContent value="calendar">
           <Card>
             <CardHeader>
               <CardTitle>Calendar View</CardTitle>
-              <CardDescription>View all your scheduled appointments</CardDescription>
+              <CardDescription>View all your scheduled events</CardDescription>
             </CardHeader>
             <CardContent>
-              <AppointmentCalendar appointments={appointments} />
+              <EventCalendar events={events} />
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="appointments">
+        <TabsContent value="events">
           <Card>
             <CardHeader>
-              <CardTitle>Appointments</CardTitle>
-              <CardDescription>Manage your scheduled appointments</CardDescription>
+              <CardTitle>Events</CardTitle>
+              <CardDescription>Manage your scheduled events</CardDescription>
             </CardHeader>
             <CardContent>
-              <AppointmentList appointments={appointments} />
+              <EventList events={events} />
             </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="new">
           <Card>
             <CardHeader>
-              <CardTitle>New Appointment</CardTitle>
-              <CardDescription>Schedule a new appointment</CardDescription>
+              <CardTitle>New Event</CardTitle>
+              <CardDescription>Schedule a new event</CardDescription>
             </CardHeader>
             <CardContent>
-              <AppointmentForm onAddAppointment={addAppointment} />
+              <EventForm onAddEvent={addEvent} />
             </CardContent>
           </Card>
         </TabsContent>

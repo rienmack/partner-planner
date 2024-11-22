@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Appointment } from '../types/appointment'
+import { Event } from '../types/event'
 import { CalendarIcon } from 'lucide-react'
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
@@ -15,18 +15,18 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-interface AppointmentFormProps {
-  onAddAppointment: (appointment: Appointment) => void
+interface EventFormProps {
+  onAddEvent: (event: Event) => void
 }
 
-export function AppointmentForm({ onAddAppointment }: AppointmentFormProps) {
+export function EventForm({ onAddEvent }: EventFormProps) {
   const [title, setTitle] = useState('')
   const [date, setDate] = useState<Date>()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (title && date) {
-      onAddAppointment({ title, date: date.toISOString() })
+      onAddEvent({ title, date: date.toISOString() })
       setTitle('')
       setDate(undefined)
     }
@@ -35,7 +35,7 @@ export function AppointmentForm({ onAddAppointment }: AppointmentFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="title">Appointment Title</Label>
+        <Label htmlFor="title">Event Title</Label>
         <Input
           id="title"
           value={title}
@@ -69,7 +69,7 @@ export function AppointmentForm({ onAddAppointment }: AppointmentFormProps) {
           </PopoverContent>
         </Popover>
       </div>
-      <Button type="submit" className="w-full">Add Appointment</Button>
+      <Button type="submit" className="w-full">Add Event</Button>
     </form>
   )
 }
