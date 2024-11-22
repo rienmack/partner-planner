@@ -1,4 +1,13 @@
 import { Appointment } from '../types/appointment'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
 
 interface AppointmentListProps {
   appointments: Appointment[]
@@ -7,17 +16,28 @@ interface AppointmentListProps {
 export function AppointmentList({ appointments }: AppointmentListProps) {
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Scheduled Appointments</h2>
-      <ul className="space-y-2">
-        {appointments.map((appointment, index) => (
-          <li key={index} className="bg-gray-100 p-2 rounded">
-            <span className="font-medium">{appointment.title}</span>
-            <span className="text-sm text-gray-600 ml-2">
-              {new Date(appointment.date).toLocaleDateString()}
-            </span>
-          </li>
-        ))}
-      </ul>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Title</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {appointments.map((appointment, index) => (
+            <TableRow key={index}>
+              <TableCell className="font-medium">{appointment.title}</TableCell>
+              <TableCell>{new Date(appointment.date).toLocaleDateString()}</TableCell>
+              <TableCell>
+                <Badge variant="outline">
+                  {new Date(appointment.date) > new Date() ? "Upcoming" : "Past"}
+                </Badge>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   )
 }

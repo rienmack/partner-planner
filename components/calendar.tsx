@@ -1,32 +1,57 @@
 "use client"
 
-import { Calendar as BigCalendar, momentLocalizer } from 'react-big-calendar'
-import moment from 'moment'
+import { CalendarIcon } from 'lucide-react'
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { Appointment } from '../types/appointment'
-
-// Setup the localizer for BigCalendar
-const localizer = momentLocalizer(moment)
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 
 interface CalendarProps {
   appointments: Appointment[]
 }
 
-export function Calendar({ appointments }: CalendarProps) {
-  const events = appointments.map(appointment => ({
-    title: appointment.title,
-    start: new Date(appointment.date),
-    end: new Date(appointment.date),
-  }))
+export function AppointmentCalendar({ appointments }: CalendarProps) {
+  const today = new Date()
+  const endOfWeek = new Date(today)
+  endOfWeek.setDate(today.getDate() + 6)
 
   return (
-    <div className="h-[600px]">
-      <BigCalendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: '100%' }}
-      />
+    <div className="space-y-4">
+      <div className="mb-4">
+        <CalendarComponent
+          mode="range"
+          selected={{
+            from: today,
+            to: endOfWeek
+          }}
+        />
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        {[...Array(7)].map((_, index) => {
+          const date = new Date(today)
+          date.setDate(today.getDate() + index)
+          const dayAppointments = appointments.filter(
+            (apt) => new Date(apt.date).toDateString() === date.toDateString()
+          )
+
+          return (
+            <Card key={index}>
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2 mb-2">
+                  <CalendarIcon className="h-4 w-4" />
+                  <span className="font-semibold">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                </div>
+                <div className="text-2xl font-bold mb-2">{date.getDate()}</div>
+                <div className="space-y-1">
+                  {dayAppointments.map((apt, i) => (
+                    <Badge key={i} variant="secondary">{apt.title}</Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
     </div>
   )
 }

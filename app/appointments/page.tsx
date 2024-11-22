@@ -20,7 +20,7 @@ export default function AppointmentsPage() {
             <CardDescription>Schedule a new appointment</CardDescription>
           </CardHeader>
           <CardContent>
-            <AppointmentForm onAddAppointment={() => console.log('test')} />
+            <AppointmentForm />
           </CardContent>
         </Card>
       </div>
