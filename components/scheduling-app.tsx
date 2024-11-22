@@ -17,7 +17,7 @@ export function SchedulingApp() {
 
   return (
     <div className="container mx-auto p-4 space-y-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Scheduler</h1>
+      <h1 className="text-4xl font-bold text-center mb-8">Partner Scheduling App</h1>
       <Tabs defaultValue="calendar" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="calendar">Calendar</TabsTrigger>
