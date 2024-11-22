@@ -41,6 +41,7 @@ export function AppointmentForm({ onAddAppointment }: AppointmentFormProps) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
+          className="w-full"
         />
       </div>
       <div className="space-y-2">
@@ -58,7 +59,7 @@ export function AppointmentForm({ onAddAppointment }: AppointmentFormProps) {
               {date ? format(date, "PPP") : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
               selected={date}

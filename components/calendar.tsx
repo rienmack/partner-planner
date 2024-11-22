@@ -35,9 +35,9 @@ export function AppointmentCalendar({ appointments }: CalendarProps) {
 
   const gridColumns = useMemo(() => {
     const count = selectedDays.length
-    if (count <= 7) return `grid-cols-${count}`
-    if (count <= 14) return 'grid-cols-7'
-    return 'grid-cols-7 lg:grid-cols-14'
+    if (count <= 3) return `grid-cols-${count}`
+    if (count <= 7) return 'grid-cols-3 md:grid-cols-7'
+    return 'grid-cols-3 md:grid-cols-7 lg:grid-cols-14'
   }, [selectedDays.length])
 
   return (
@@ -50,8 +50,8 @@ export function AppointmentCalendar({ appointments }: CalendarProps) {
           className="rounded-md border"
         />
       </div>
-      <ScrollArea className="h-[400px] rounded-md border">
-        <div className={`grid gap-2 p-4 ${gridColumns}`}>
+      <ScrollArea className="h-[300px] md:h-[400px] rounded-md border">
+        <div className={`grid gap-2 p-2 md:p-4 ${gridColumns}`}>
           {selectedDays.map((date, index) => {
             const dayAppointments = appointments.filter((apt) =>
               isSameDay(new Date(apt.date), date)
@@ -59,17 +59,17 @@ export function AppointmentCalendar({ appointments }: CalendarProps) {
 
             return (
               <Card key={index} className="h-full">
-                <CardContent className="p-2">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <CalendarIcon className="h-4 w-4" />
+                <CardContent className="p-1 md:p-2">
+                  <div className="flex items-center space-x-1 md:space-x-2 mb-1 md:mb-2">
+                    <CalendarIcon className="h-3 w-3 md:h-4 md:w-4" />
                     <span className="font-semibold text-xs">
                       {date.toLocaleDateString('en-US', { weekday: 'short' })}
                     </span>
                   </div>
-                  <div className="text-lg font-bold mb-2">{date.getDate()}</div>
+                  <div className="text-sm md:text-lg font-bold mb-1 md:mb-2">{date.getDate()}</div>
                   <div className="space-y-1">
                     {dayAppointments.map((apt, i) => (
-                      <Badge key={i} variant="secondary" className="text-xs truncate">
+                      <Badge key={i} variant="secondary" className="text-xs truncate w-full">
                         {apt.title}
                       </Badge>
                     ))}

@@ -17,12 +17,12 @@ export function SchedulingApp() {
 
   return (
     <div className="container mx-auto p-4 space-y-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Partner Scheduling App</h1>
+      <h1 className="text-2xl md:text-4xl font-bold text-center mb-4 md:mb-8">Partner Scheduling App</h1>
       <Tabs defaultValue="calendar" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="calendar">Calendar</TabsTrigger>
           <TabsTrigger value="appointments">Appointments</TabsTrigger>
-          <TabsTrigger value="new">New Appointment</TabsTrigger>
+          <TabsTrigger value="new">New</TabsTrigger>
         </TabsList>
         <TabsContent value="calendar">
           <Card>
