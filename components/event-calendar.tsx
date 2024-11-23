@@ -1,20 +1,34 @@
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { Event } from "@/types/event"
+import { useState } from "react"
 
 interface EventCalendarProps {
-  events: Event[] 
+  events: Event[]
 }
 
 export function EventCalendar({ events }: EventCalendarProps) {
+  const [currentDate, setCurrentDate] = useState(new Date())
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)))
+  }
+
+  const prevMonth = () => {
+    setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)))
+  }
+
   return (
     <div className="mt-6">
       <div className="flex items-center justify-between mb-4">
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" onClick={prevMonth}>
           <ChevronLeft className="h-4 w-4 mr-1" />
           Previous
         </Button>
-        <h3 className="text-lg font-medium">November 2024</h3>
-        <Button variant="outline" size="sm">
+        <h3 className="text-lg font-medium">
+          {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+        </h3>
+        <Button variant="outline" size="sm" onClick={nextMonth}>
           Next
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
@@ -26,6 +40,10 @@ export function EventCalendar({ events }: EventCalendarProps) {
             {day}
           </div>
         ))}
+      </div>
+
+      <div className="grid grid-cols-7 gap-1">
+        {/* Calendar grid implementation */}
       </div>
     </div>
   )
