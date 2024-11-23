@@ -32,10 +32,29 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
 
   const fetchEvents = async () => {
     const supabase = createClient()
+    
+    // First get the user's partner_id
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('partner_id')
+      .eq('id', userId)
+      .single()
+
+    if (profileError) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch profile",
+        variant: "destructive",
+      })
+      setLoading(false)
+      return
+    }
+
+    // Fetch events for both user and partner
     const { data, error } = await supabase
       .from('events')
       .select('*')
-      .eq('creator_id', userId)
+      .or(`creator_id.eq.${userId},creator_id.eq.${profile.partner_id}`)
       .order('date', { ascending: true })
 
     if (error) {
@@ -60,7 +79,7 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
     const supabase = createClient()
     const { error } = await supabase
       .from('events')
-      .insert([{ ...event, userId }])
+      .insert([{ ...event, creator_id: userId }])
 
     if (error) {
       toast({
