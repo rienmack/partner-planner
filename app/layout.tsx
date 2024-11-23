@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Scheduler",
-  description: "Scheduling App for Families",
+  title: "Partner Planner",
+  description: "Plan and coordinate with your partner",
 };
 
 export default function RootLayout({

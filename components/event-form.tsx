@@ -4,72 +4,74 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Event } from '../types/event'
-import { CalendarIcon } from 'lucide-react'
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Event } from '@/types/event'
 
 interface EventFormProps {
-  onAddEvent: (event: Event) => void
+  onSubmit: (event: Event) => void
 }
 
-export function EventForm({ onAddEvent }: EventFormProps) {
+export function EventForm({ onSubmit }: EventFormProps) {
   const [title, setTitle] = useState('')
-  const [date, setDate] = useState<Date>()
+  const [date, setDate] = useState('')
+  const [time, setTime] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (title && date) {
-      onAddEvent({ title, date: date.toISOString() })
-      setTitle('')
-      setDate(undefined)
+    
+    const newEvent: Event = {
+      title,
+      date: `${date}${time ? 'T' + time : ''}`
     }
+
+    onSubmit(newEvent)
+
+    setTitle('')
+    setDate('')
+    setTime('')
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="mt-6 space-y-6">
       <div className="space-y-2">
         <Label htmlFor="title">Event Title</Label>
-        <Input
+        <Input 
           id="title"
+          placeholder="Enter event title"
+          className="max-w-md"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          className="w-full"
         />
       </div>
+
       <div className="space-y-2">
-        <Label>Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !date && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP") : <span>Pick a date</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover>
+        <Label htmlFor="date">Date</Label>
+        <Input 
+          id="date"
+          type="date"
+          className="max-w-md"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+        />
       </div>
-      <Button type="submit" className="w-full">Add Event</Button>
+
+      <div className="space-y-2">
+        <Label htmlFor="time">Time (optional)</Label>
+        <Input 
+          id="time"
+          type="time"
+          className="max-w-md"
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+        />
+      </div>
+
+      <div className="pt-4">
+        <Button type="submit" className="w-full max-w-md">
+          Create Event
+        </Button>
+      </div>
     </form>
   )
 }
