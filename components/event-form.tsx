@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Event } from '@/types/event'
+import { createClient } from '@/lib/supabase/client'
 
 interface EventFormProps {
   onSubmit: (event: Event) => void
@@ -14,13 +15,24 @@ export function EventForm({ onSubmit }: EventFormProps) {
   const [title, setTitle] = useState('')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
-
+  const [userId, setUserId] = useState<string>('')
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
+    useEffect(() => {
+      fetchUser()
+    }, []) 
+
+    const fetchUser = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+      setUserId(user.id)
+    }
     const newEvent: Event = {
       title,
-      date: `${date}${time ? 'T' + time : ''}`
+      date: `${date}${time ? 'T' + time : ''}`,
+      creator_id: userId
     }
 
     onSubmit(newEvent)

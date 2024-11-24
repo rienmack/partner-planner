@@ -7,6 +7,7 @@ export interface PartnerRequest {
   status: RequestStatus;
   created_at: string;
   updated_at: string;
+  requester: Partner;
 }
 
 export type Partner = {
