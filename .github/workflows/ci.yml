@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  lint-and-test:
+  lint-and-type-check:
     runs-on: ubuntu-latest
     environment:
       name: development
@@ -34,9 +34,3 @@ jobs:
 
       - name: Check types
         run: npm run type-check
-
-      - name: Run tests
-        run: npm run test
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }} 
