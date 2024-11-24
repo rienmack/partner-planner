@@ -16,19 +16,21 @@ export function EventForm({ onSubmit }: EventFormProps) {
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [userId, setUserId] = useState<string>('')
+
+  useEffect(() => {
+    fetchUser()
+  }, [])
+
+  const fetchUser = async () => {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    setUserId(user.id)
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-
-    useEffect(() => {
-      fetchUser()
-    }, []) 
-
-    const fetchUser = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-      setUserId(user.id)
-    }
+    
     const newEvent: Event = {
       title,
       date: `${date}${time ? 'T' + time : ''}`,
