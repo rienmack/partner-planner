@@ -15,12 +15,12 @@ export function PartnerRequests() {
 
   useEffect(() => {
     fetchRequests()
-    
+
     // Subscribe to changes
     const channel = supabase
       .channel('partner_requests')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'partner_requests' }, 
+      .on('postgres_changes',
+        { event: '*', schema: 'public', table: 'partner_requests' },
         () => fetchRequests()
       )
       .subscribe()
@@ -60,8 +60,8 @@ export function PartnerRequests() {
     try {
       const { error: updateError } = await supabase
         .from('partner_requests')
-        .update({ 
-          status: accept ? 'accepted' : 'rejected' 
+        .update({
+          status: accept ? 'accepted' : 'rejected'
         })
         .eq('id', requestId)
 
@@ -92,6 +92,7 @@ export function PartnerRequests() {
         description: accept ? "You are now linked with your partner" : "Partner request rejected",
       })
     } catch (error) {
+      console.error(error);
       toast({
         title: "Error",
         description: "Failed to process request",
@@ -120,13 +121,13 @@ export function PartnerRequests() {
                 <p className="text-sm text-gray-500">wants to be your partner</p>
               </div>
               <div className="space-x-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => handleRequest(request.id, false)}
                 >
                   Decline
                 </Button>
-                <Button 
+                <Button
                   onClick={() => handleRequest(request.id, true)}
                 >
                   Accept

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { EventCalendar } from './calendar'
 import { EventForm } from './event-form'
 import { EventList } from './event-list'
@@ -24,18 +24,31 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [events, setEvents] = useState<Event[]>([])
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchEvents()
-  }, [])
-
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     const supabase = createClient()
+
+    // First get the user's partner_id
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('partner_id')
+      .eq('id', userId)
+      .single()
+
+    if (profileError) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch profile",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Fetch events for both user and partner
     const { data, error } = await supabase
       .from('events')
       .select('*')
-      .eq('creator_id', userId)
+      .or(`creator_id.eq.${userId},creator_id.eq.${profile.partner_id}`)
       .order('date', { ascending: true })
 
     if (error) {
@@ -47,8 +60,11 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
     } else {
       setEvents(data || [])
     }
-    setLoading(false)
-  }
+  }, [toast, userId]);
+
+  useEffect(() => {
+    fetchEvents()
+  }, [fetchEvents])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -60,7 +76,7 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
     const supabase = createClient()
     const { error } = await supabase
       .from('events')
-      .insert([{ ...event, userId }])
+      .insert([{ ...event, creator_id: userId }])
 
     if (error) {
       toast({
@@ -83,8 +99,8 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
         <h1 className="text-3xl font-bold text-gray-800">
           Partner Planner
         </h1>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={handleSignOut}
           className="hover:bg-gray-100"
         >

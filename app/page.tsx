@@ -1,5 +1,4 @@
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 import { SchedulingApp } from '../components/scheduling-app'
 import { LoginForm } from '@/components/auth/login-form'
 import { SignUpForm } from '@/components/auth/signup-form'
@@ -8,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default async function Home() {
   const supabase = createClient()
-  
+
   const { data: { user }, error } = await supabase.auth.getUser()
 
   if (error || !user) {

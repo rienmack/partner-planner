@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export function SignUpForm() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [fullName, setFullName] = useState('')
@@ -39,7 +37,7 @@ export function SignUpForm() {
       if (signUpError) throw signUpError
 
       setConfirmationSent(true)
-      
+
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred during sign up')
     } finally {
@@ -67,7 +65,7 @@ export function SignUpForm() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
-      
+
       <div className="space-y-2">
         <Label htmlFor="full-name">Full Name</Label>
         <Input

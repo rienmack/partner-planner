@@ -5,24 +5,23 @@ import { CalendarIcon } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Event } from '../types/event'
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
+import { Calendar as CalendarComponent} from "@/components/ui/calendar"
 import { eachDayOfInterval, isSameDay } from 'date-fns'
 import { ScrollArea } from "@/components/ui/scroll-area"
+import type { DateRange } from 'react-day-picker'
 
 interface CalendarProps {
   events: Event[]
 }
 
 export function EventCalendar({ events }: CalendarProps) {
-  const [dateRange, setDateRange] = useState<{
-    from: Date
-    to: Date
-  } | undefined>({
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(),
     to: new Date()
   })
+   
 
-  const handleSelect = (range: { from: Date; to: Date } | undefined) => {
+  const handleSelect = (range:  DateRange | undefined) => {
     setDateRange(range)
   }
 

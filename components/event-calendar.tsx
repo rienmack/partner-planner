@@ -1,13 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Event } from "@/types/event"
 import { useState } from "react"
 
-interface EventCalendarProps {
-  events: Event[]
-}
-
-export function EventCalendar({ events }: EventCalendarProps) {
+export function EventCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date())
 
   const nextMonth = () => {

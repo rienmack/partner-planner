@@ -4,42 +4,58 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
 import { createClient } from '@/lib/supabase/client'
+import { Partner } from '@/types/partner'
 
-interface AvailablePartner {
-  id: string
-  email: string
-  full_name: string
+// Create this outside the component to persist between re-renders
+const fetchController = {
+  hasRun: false
 }
 
 export function PartnerLinkForm() {
-  const [availablePartners, setAvailablePartners] = useState<AvailablePartner[]>([])
+  const [availablePartners, setAvailablePartners] = useState<Partner[]>([])
   const [loading, setLoading] = useState(true)
-  const { toast } = useToast()
 
   useEffect(() => {
-    fetchAvailablePartners()
+    let isMounted = true
+
+    console.log('Fetching partners...');   
+     if (fetchController.hasRun) {
+      setLoading(false)
+      return
+    }
+
+    const fetchPartners = async () => {
+      try {
+        fetchController.hasRun = true
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user || !isMounted) return
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, email, full_name')
+          .neq('id', user.id)
+          .single()
+
+        if (!error && isMounted) {
+          setAvailablePartners(data ? [data] : [])
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    fetchPartners()
+
+    return () => {
+      isMounted = false
+    }
   }, [])
 
-  const fetchAvailablePartners = async () => {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-
-    // This will only return profiles with matching passphrases due to RLS
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, email, full_name')
-      .neq('id', user.id)
-
-    if (!error) {
-      setAvailablePartners(data || [])
-    }
-    setLoading(false)
-  }
-
   const handleSendRequest = async (partnerId: string) => {
+    console.log('Sending request to partner:', partnerId)
     // Your existing request sending logic
   }
 

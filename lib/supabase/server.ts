@@ -16,6 +16,7 @@ export const createClient = () => {
           try {
             cookieStore.set({ name, value, ...options })
           } catch (error) {
+            console.error(error);
             // Handle cookie errors
           }
         },
@@ -24,6 +25,7 @@ export const createClient = () => {
             cookieStore.set({ name, value: '', ...options })
           } catch (error) {
             // Handle cookie errors
+            console.error(error);
           }
         },
       },
