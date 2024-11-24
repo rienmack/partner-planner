@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { EventCalendar } from './calendar'
 import { EventForm } from './event-form'
 import { EventList } from './event-list'
@@ -24,15 +24,10 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [events, setEvents] = useState<Event[]>([])
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchEvents()
-  }, [])
-
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     const supabase = createClient()
-    
+
     // First get the user's partner_id
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -46,7 +41,6 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
         description: "Failed to fetch profile",
         variant: "destructive",
       })
-      setLoading(false)
       return
     }
 
@@ -66,8 +60,11 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
     } else {
       setEvents(data || [])
     }
-    setLoading(false)
-  }
+  }, [toast, userId]);
+
+  useEffect(() => {
+    fetchEvents()
+  }, [fetchEvents])
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -102,8 +99,8 @@ export function SchedulingApp({ userId }: SchedulingAppProps) {
         <h1 className="text-3xl font-bold text-gray-800">
           Partner Planner
         </h1>
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={handleSignOut}
           className="hover:bg-gray-100"
         >

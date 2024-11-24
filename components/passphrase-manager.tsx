@@ -19,32 +19,34 @@ export function PassphraseManager() {
   const supabase = createClient()
 
   useEffect(() => {
-    fetchPassphrase()
-  }, [])
+    const fetchPassphrase = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) throw new Error('Not authenticated')
 
-  const fetchPassphrase = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('passphrase')
+          .eq('id', user.id)
+          .single()
 
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('passphrase')
-        .eq('id', user.id)
-        .single()
-
-      if (error) throw error
-      setCurrentPassphrase(data?.passphrase || null)
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch current passphrase",
-        variant: "destructive",
-      })
-    } finally {
-      setLoading(false)
+        if (error) throw error
+        setCurrentPassphrase(data?.passphrase || null)
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to fetch current passphrase",
+          variant: "destructive",
+        })
+        console.error(error);
+      } finally {
+        setLoading(false)
+      }
     }
-  }
+
+    fetchPassphrase()
+  }, [supabase, toast])
+
 
   const handleUpdatePassphrase = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,12 +65,13 @@ export function PassphraseManager() {
 
       setCurrentPassphrase(newPassphrase.trim())
       setNewPassphrase('')
-      
+
       toast({
         title: "Success",
         description: "Your passphrase has been updated",
       })
     } catch (error) {
+      console.error(error);
       toast({
         title: "Error",
         description: "Failed to update passphrase",
@@ -98,7 +101,7 @@ export function PassphraseManager() {
       <CardHeader>
         <CardTitle>Connection Passphrase</CardTitle>
         <CardDescription>
-          Share this passphrase with your partner to connect. You'll only be able to see other users
+          Share this passphrase with your partner to connect. You&apos;ll only be able to see other users
           who have the same passphrase.
         </CardDescription>
       </CardHeader>
@@ -121,7 +124,7 @@ export function PassphraseManager() {
         ) : (
           <Alert>
             <AlertDescription>
-              You haven't set a passphrase yet. Set one to connect with your partner.
+              You haven&apos;t set a passphrase yet. Set one to connect with your partner.
             </AlertDescription>
           </Alert>
         )}
@@ -143,8 +146,8 @@ export function PassphraseManager() {
             </p>
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={updating || !newPassphrase.trim()}
           >
             {updating ? 'Updating...' : (currentPassphrase ? 'Update Passphrase' : 'Set Passphrase')}
